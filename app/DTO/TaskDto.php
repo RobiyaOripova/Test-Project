@@ -1,15 +1,18 @@
 <?php
 
-namespace app\DTO;
+namespace App\DTO;
 
-use Enums\StatusEnum;
+
+
+
+use App\Enums\StatusEnum;
 
 class TaskDto
 {
     public function __construct(
         public string     $title,
         public string     $description,
-        public StatusEnum $status,
+        public int $status,
     )
     {
     }
