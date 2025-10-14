@@ -2,11 +2,6 @@
 
 namespace App\DTO;
 
-
-
-
-use App\Enums\StatusEnum;
-
 class TaskDto
 {
     public function __construct(
