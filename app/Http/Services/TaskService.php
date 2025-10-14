@@ -28,14 +28,14 @@ class TaskService
         ]);
     }
 
-    public function update(Task $task, TaskDto $dto): Task
+    public function update(Task $task, TaskDto $dto): void
     {
         $task->update([
             'title' => $dto->title,
             'description' => $dto->description,
             'status' => $dto->status,
         ]);
-        return $task;
+
     }
 
     public function delete(Task $task): ?bool
