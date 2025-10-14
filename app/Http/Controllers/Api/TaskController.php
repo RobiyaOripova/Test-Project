@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\DTO\TaskDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TaskRequest;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Services\TaskService;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
@@ -17,44 +18,55 @@ class TaskController extends Controller
 
     public function index(): JsonResponse
     {
-        return response()->json($this->taskService->get());
+        $tasks = $this->taskService->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $tasks,
+        ]);
     }
 
     public function show(Task $task): JsonResponse
     {
-        return response()->json($this->taskService->show(task: $task));
+        $data = $this->taskService->show($task);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ]);
     }
 
-    public function create(TaskRequest $request): JsonResponse
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        $result = $this->taskService->create(
-            dto: $this->makeTaskDto(request: $request)
-        );
-        return response()->json(['result' => $result]);
+        $dto = new TaskDto(...$request->validated());
+        $result = $this->taskService->create($dto);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task created successfully',
+            'data' => $result,
+        ], 201);
     }
 
-    public function update(TaskRequest $request, Task $task): JsonResponse
+    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $result = $this->taskService->update(
-            task: $task,
-            dto: $this->makeTaskDto(request: $request)
-        );
-        return response()->json(['result' => $result]);
+        $dto = new TaskDto(...$request->validated());
+        $result = $this->taskService->update($task, $dto);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task updated successfully',
+            'data' => $result,
+        ]);
     }
 
-    public function delete(Task $task): JsonResponse
+    public function destroy(Task $task): JsonResponse
     {
-        return response()->json(['result' => $this->taskService->delete(task: $task)]);
+        $this->taskService->delete($task);
 
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task deleted successfully',
+        ]);
     }
-
-    public function makeTaskDto(TaskRequest $request): TaskDto
-    {
-        return new TaskDto(
-            title: $request->validated('title'),
-            description: $request->validated('description'),
-            status: $request->validated('status'),
-        );
-    }
-
 }
