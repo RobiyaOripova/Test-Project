@@ -19,13 +19,15 @@ class TaskService
         return new TaskResource($task);
     }
 
-    public function create(TaskDto $dto)
+    public function create(TaskDto $dto): TaskResource
     {
-        return Task::query()->create([
+        $task = Task::query()->create([
             'title' => $dto->title,
             'description' => $dto->description,
             'status' => $dto->status,
         ]);
+
+        return new TaskResource($task);
     }
 
     public function update(Task $task, TaskDto $dto): TaskResource
