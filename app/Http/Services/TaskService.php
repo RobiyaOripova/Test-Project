@@ -28,13 +28,15 @@ class TaskService
         ]);
     }
 
-    public function update(Task $task, TaskDto $dto): void
+    public function update(Task $task, TaskDto $dto): TaskResource
     {
         $task->update([
             'title' => $dto->title,
             'description' => $dto->description,
             'status' => $dto->status,
         ]);
+
+        return new TaskResource($task);
 
     }
 
